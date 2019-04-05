@@ -24,6 +24,7 @@
  */ 
 
 import SpriteKit
+import GameplayKit
 
 let BallCategoryName = "ball"
 let PaddleCategoryName = "paddle"
@@ -39,16 +40,33 @@ let BorderCategory  : UInt32 = 0x1 << 4
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     var isFingerOnPaddle = false
+    lazy var gameState: GKStateMachine = GKStateMachine(states: [
+        WaitingForTap(scene: self),
+        Playing(scene: self),
+        GameOver(scene: self)])
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let touch = touches.first
-        let touchLocation = touch!.location(in: self)
-        
-        if let body = physicsWorld.body(at: touchLocation) {
-            if body.node!.name == PaddleCategoryName {
-                print("Began touch on paddle")
-                isFingerOnPaddle = true
+        switch gameState.currentState {
+        case is WaitingForTap:
+            gameState.enter(Playing.self)
+            isFingerOnPaddle = true
+            
+        case is Playing:
+            let touch = touches.first
+            let touchLocation = touch!.location(in: self)
+            
+            if let body = physicsWorld.body(at: touchLocation) {
+                if body.node!.name == PaddleCategoryName {
+                    isFingerOnPaddle = true
+                }
             }
+            
+        default:
+            break
         }
+    }
+    
+    override func update(_ currentTime: TimeInterval) {
+        gameState.update(deltaTime: currentTime)
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -82,7 +100,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     physicsWorld.contactDelegate = self
     
     let ball = childNode(withName: BallCategoryName) as! SKSpriteNode
-    ball.physicsBody!.applyImpulse(CGVector(dx: 2.0, dy: -2.0))
+//    ball.physicsBody!.applyImpulse(CGVector(dx: 2.0, dy: -2.0))
     
     let bottomRect = CGRect(x: frame.origin.x, y: frame.origin.y, width: frame.size.width, height: 1)
     let bottom = SKNode()
@@ -95,7 +113,37 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     ball.physicsBody!.categoryBitMask = BallCategory
     paddle.physicsBody!.categoryBitMask = PaddleCategory
     borderBody.categoryBitMask = BorderCategory
-    ball.physicsBody!.contactTestBitMask = BottomCategory
+    ball.physicsBody!.contactTestBitMask = BottomCategory | BlockCategory
+    
+    let numberOfBlocks = 8
+    let blockWidth = SKSpriteNode(imageNamed: "block").size.width
+    let totalBlocksWidth = blockWidth * CGFloat(numberOfBlocks)
+    
+    let xOffset = (frame.width - totalBlocksWidth) / 2
+    
+    for i in 0..<numberOfBlocks {
+        let block = SKSpriteNode(imageNamed: "block.png")
+        block.position = CGPoint(x: xOffset + CGFloat(CGFloat(i) + 0.5) * blockWidth, y: frame.height * 0.8)
+        
+        block.physicsBody = SKPhysicsBody(rectangleOf: block.frame.size)
+        block.physicsBody!.allowsRotation = false
+        block.physicsBody!.friction = 0.0
+        block.physicsBody!.affectedByGravity = false
+        block.physicsBody!.isDynamic = false
+        block.name = BlockCategoryName
+        block.physicsBody!.categoryBitMask = BlockCategory
+        block.zPosition = 2
+        addChild(block)
+    }
+    
+    let gameMessage = SKSpriteNode(imageNamed: "TapToPlay")
+    gameMessage.name = GameMessageName
+    gameMessage.position = CGPoint(x: frame.midX, y: frame.midY)
+    gameMessage.zPosition = 4
+    gameMessage.setScale(0.0)
+    addChild(gameMessage)
+    
+    gameState.enter(WaitingForTap.self)
   }
   
     func didBegin(_ contact: SKPhysicsContact) {
@@ -113,6 +161,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == BottomCategory {
             print("Hit bottom. First contact has been made.")
         }
+        if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == BlockCategory {
+            breakBlock(node: secondBody.node!)
+        }
+    }
+    
+    func breakBlock(node: SKNode) {
+        let particles = SKEmitterNode(fileNamed: "BorkenPlatform")!
+        particles.position = node.position
+        particles.zPosition = 3
+        addChild(particles)
+        particles.run(SKAction.sequence([SKAction.wait(forDuration: 1.0),
+                                         SKAction.removeFromParent()]))
+        node.removeFromParent()
+    }
+    
+    func randomFloat(from: CGFloat, to: CGFloat) -> CGFloat {
+        let rand: CGFloat = CGFloat(Float(arc4random()) / 0xFFFFFFFF)
+        return (rand) * (to - from) + from
     }
     
 }
