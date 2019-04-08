@@ -61,11 +61,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
-    let blipSound = SKAction.playSoundFileNamed("pongblip", waitForCompletion: false)
-    let blipPaddleSound = SKAction.playSoundFileNamed("paddleBlip", waitForCompletion: false)
-    let bambooBreakSound = SKAction.playSoundFileNamed("BambooBreak", waitForCompletion: false)
-    let gameWonSound = SKAction.playSoundFileNamed("game-won", waitForCompletion: false)
-    let gameOverSound = SKAction.playSoundFileNamed("game-over", waitForCompletion: false)
+    let blipSound = SKAction.playSoundFileNamed("fireball", waitForCompletion: false)
+    let blipPaddleSound = SKAction.playSoundFileNamed("fireball", waitForCompletion: false)
+    let bambooBreakSound = SKAction.playSoundFileNamed("blockbreak", waitForCompletion: false)
+    let gameWonSound = SKAction.playSoundFileNamed("Mario Win.mp3", waitForCompletion: false)
+    let gameOverSound = SKAction.playSoundFileNamed("Mario Lose.mp3", waitForCompletion: false)
+    let backgroundMusic = SKAudioNode(fileNamed: "1-1 Mario.mp3")
+
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         switch gameState.currentState {
@@ -128,6 +130,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     scoreLabel.zPosition = 10
     scoreLabel.fontColor = SKColor.black
     addChild(scoreLabel)
+    
+    backgroundMusic.autoplayLooped = true
+    addChild(backgroundMusic)
     
     
     let borderBody = SKPhysicsBody(edgeLoopFrom: self.frame)
@@ -216,6 +221,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             gameState.enter(GameOver.self)
             blocksBroken = 0
             scoreLabel.text = "Consecutive Hits = \(blocksBroken)"
+            backgroundMusic.run(SKAction.stop())
             gameWon = false
             }
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == BlockCategory {
@@ -223,6 +229,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             breakBlock(node: secondBody.node!)
             if isGameWon() {
                 gameState.enter(GameOver.self)
+                backgroundMusic.run(SKAction.stop())
                 gameWon = true
             }
         }
