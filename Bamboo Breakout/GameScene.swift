@@ -35,15 +35,38 @@ let BottomCategory  : UInt32 = 0x1 << 1
 let BlockCategory   : UInt32 = 0x1 << 2
 let PaddleCategory  : UInt32 = 0x1 << 3
 let BorderCategory  : UInt32 = 0x1 << 4
+var blocksBroken = 0
 
 
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     var isFingerOnPaddle = false
+    var scoreLabel: SKLabelNode!
+
+   
     lazy var gameState: GKStateMachine = GKStateMachine(states: [
         WaitingForTap(scene: self),
         Playing(scene: self),
         GameOver(scene: self)])
+ 
+    var gameWon : Bool = false {
+        didSet {
+            let gameOver = childNode(withName: GameMessageName) as! SKSpriteNode
+            let textureName = gameWon ? "YouWon" : "GameOver"
+            let texture = SKTexture(imageNamed: textureName)
+            let actionSequence = SKAction.sequence([SKAction.setTexture(texture), SKAction.scale(to: 1.0, duration: 0.25)])
+            run(gameWon ? gameWonSound : gameOverSound)
+            
+            gameOver.run(actionSequence)
+        }
+    }
+    
+    let blipSound = SKAction.playSoundFileNamed("pongblip", waitForCompletion: false)
+    let blipPaddleSound = SKAction.playSoundFileNamed("paddleBlip", waitForCompletion: false)
+    let bambooBreakSound = SKAction.playSoundFileNamed("BambooBreak", waitForCompletion: false)
+    let gameWonSound = SKAction.playSoundFileNamed("game-won", waitForCompletion: false)
+    let gameOverSound = SKAction.playSoundFileNamed("game-over", waitForCompletion: false)
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         switch gameState.currentState {
         case is WaitingForTap:
@@ -59,6 +82,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     isFingerOnPaddle = true
                 }
             }
+            
+        case is GameOver:
+            let newScene = GameScene(fileNamed:"GameScene")
+            newScene!.scaleMode = .aspectFit
+            let reveal = SKTransition.flipHorizontal(withDuration: 0.5)
+            self.view?.presentScene(newScene!,transition: reveal)
             
         default:
             break
@@ -92,6 +121,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
   override func didMove(to view: SKView) {
     super.didMove(to: view)
     
+    scoreLabel = SKLabelNode(fontNamed: "Chalkduster")
+    scoreLabel.position = CGPoint(x: size.width * 0.2, y: size.height * 0.8)
+    scoreLabel.text = "Score = \(blocksBroken)"
+    scoreLabel.fontSize = 24
+    scoreLabel.zPosition = 10
+    scoreLabel.fontColor = SKColor.black
+    addChild(scoreLabel)
+    
+    
     let borderBody = SKPhysicsBody(edgeLoopFrom: self.frame)
     borderBody.friction = 0
     self.physicsBody = borderBody
@@ -101,6 +139,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     let ball = childNode(withName: BallCategoryName) as! SKSpriteNode
 //    ball.physicsBody!.applyImpulse(CGVector(dx: 2.0, dy: -2.0))
+    
+    let trailNode = SKNode()
+    trailNode.zPosition = 1
+    addChild(trailNode)
+    let trail = SKEmitterNode(fileNamed: "BallTrail")!
+    trail.targetNode = trailNode
+    ball.addChild(trail)
     
     let bottomRect = CGRect(x: frame.origin.x, y: frame.origin.y, width: frame.size.width, height: 1)
     let bottom = SKNode()
@@ -113,7 +158,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     ball.physicsBody!.categoryBitMask = BallCategory
     paddle.physicsBody!.categoryBitMask = PaddleCategory
     borderBody.categoryBitMask = BorderCategory
-    ball.physicsBody!.contactTestBitMask = BottomCategory | BlockCategory
+    ball.physicsBody!.contactTestBitMask = BottomCategory | BlockCategory | BorderCategory | PaddleCategory
     
     let numberOfBlocks = 8
     let blockWidth = SKSpriteNode(imageNamed: "block").size.width
@@ -147,6 +192,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
   }
   
     func didBegin(_ contact: SKPhysicsContact) {
+        if gameState.currentState is Playing {
         var firstBody: SKPhysicsBody
         var secondBody: SKPhysicsBody
         
@@ -157,17 +203,34 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             firstBody = contact.bodyB
             secondBody = contact.bodyA
         }
+            if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == BorderCategory {
+                run(blipSound)
+            }
+            
+            if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == PaddleCategory {
+                run(blipPaddleSound)
+            }
+            
         
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == BottomCategory {
-            print("Hit bottom. First contact has been made.")
-        }
+            gameState.enter(GameOver.self)
+            gameWon = false
+            }
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == BlockCategory {
+            run(bambooBreakSound)
             breakBlock(node: secondBody.node!)
+            if isGameWon() {
+                gameState.enter(GameOver.self)
+                gameWon = true
+            }
         }
     }
+}
     
     func breakBlock(node: SKNode) {
-        let particles = SKEmitterNode(fileNamed: "BorkenPlatform")!
+        let particles = SKEmitterNode(fileNamed: "BrokenPlatform")!
+        blocksBroken += 1
+        scoreLabel.text = "Score = \(blocksBroken)"
         particles.position = node.position
         particles.zPosition = 3
         addChild(particles)
@@ -179,6 +242,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func randomFloat(from: CGFloat, to: CGFloat) -> CGFloat {
         let rand: CGFloat = CGFloat(Float(arc4random()) / 0xFFFFFFFF)
         return (rand) * (to - from) + from
+    }
+    
+    func isGameWon() -> Bool {
+        var numberOfBricks = 0
+        self.enumerateChildNodes(withName: BlockCategoryName) {
+            node, stop in
+            numberOfBricks = numberOfBricks + 1
+        }
+        return numberOfBricks == 0
     }
     
 }
