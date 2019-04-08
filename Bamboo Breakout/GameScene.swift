@@ -122,8 +122,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     super.didMove(to: view)
     
     scoreLabel = SKLabelNode(fontNamed: "Chalkduster")
-    scoreLabel.position = CGPoint(x: size.width * 0.2, y: size.height * 0.8)
-    scoreLabel.text = "Score = \(blocksBroken)"
+    scoreLabel.position = CGPoint(x: size.width * 0.3, y: size.height * 0.9)
+    scoreLabel.text = "Consecutive Hits = \(blocksBroken)"
     scoreLabel.fontSize = 24
     scoreLabel.zPosition = 10
     scoreLabel.fontColor = SKColor.black
@@ -214,6 +214,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == BottomCategory {
             gameState.enter(GameOver.self)
+            blocksBroken = 0
+            scoreLabel.text = "Consecutive Hits = \(blocksBroken)"
             gameWon = false
             }
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == BlockCategory {
@@ -229,8 +231,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func breakBlock(node: SKNode) {
         let particles = SKEmitterNode(fileNamed: "BrokenPlatform")!
-        blocksBroken += 1
-        scoreLabel.text = "Score = \(blocksBroken)"
         particles.position = node.position
         particles.zPosition = 3
         addChild(particles)
@@ -250,6 +250,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             node, stop in
             numberOfBricks = numberOfBricks + 1
         }
+        blocksBroken += 1
+        scoreLabel.text = "Consecutive Hits = \(blocksBroken)"
         return numberOfBricks == 0
     }
     
