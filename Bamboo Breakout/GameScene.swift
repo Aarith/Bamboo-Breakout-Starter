@@ -64,9 +64,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let blipSound = SKAction.playSoundFileNamed("fireball", waitForCompletion: false)
     let blipPaddleSound = SKAction.playSoundFileNamed("fireball", waitForCompletion: false)
     let bambooBreakSound = SKAction.playSoundFileNamed("blockbreak", waitForCompletion: false)
-    let gameWonSound = SKAction.playSoundFileNamed("Mario Win.mp3", waitForCompletion: false)
-    let gameOverSound = SKAction.playSoundFileNamed("Mario Lose.mp3", waitForCompletion: false)
-    let backgroundMusic = SKAudioNode(fileNamed: "1-1 Mario.mp3")
+    let gameWonSound = SKAction.playSoundFileNamed("Mario Win", waitForCompletion: false)
+    let gameOverSound = SKAction.playSoundFileNamed("Mario Lose", waitForCompletion: false)
+    let backgroundMusic = SKAudioNode(fileNamed: "1-1 Mario")
 
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
