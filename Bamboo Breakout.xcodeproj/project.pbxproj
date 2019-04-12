@@ -11,11 +11,6 @@
 		204D49022260D44F0079F60B /* Mario Lose.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 204D48FF2260D44F0079F60B /* Mario Lose.mp3 */; };
 		204D49032260D44F0079F60B /* Mario Win.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 204D49002260D44F0079F60B /* Mario Win.mp3 */; };
 		204D49042260D44F0079F60B /* fireball.wav in Resources */ = {isa = PBXBuildFile; fileRef = 204D49012260D44F0079F60B /* fireball.wav */; };
-		20B8F2E5225BF330004246E8 /* 1-1 Mario.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 20B8F2E4225BF330004246E8 /* 1-1 Mario.mp3 */; };
-		20B8F2E8225BF4CE004246E8 /* Mario Win.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 20B8F2E7225BF4CE004246E8 /* Mario Win.mp3 */; };
-		20B8F2EA225BF521004246E8 /* Mario Lose.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 20B8F2E9225BF521004246E8 /* Mario Lose.mp3 */; };
-		20B8F2EC225BF58E004246E8 /* blockbreak.wav in Resources */ = {isa = PBXBuildFile; fileRef = 20B8F2EB225BF58E004246E8 /* blockbreak.wav */; };
-		20B8F2EE225BF591004246E8 /* fireball.wav in Resources */ = {isa = PBXBuildFile; fileRef = 20B8F2ED225BF591004246E8 /* fireball.wav */; };
 		F577B38F1CB81F840005E827 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F577B38E1CB81F840005E827 /* AppDelegate.swift */; };
 		F577B3911CB81F840005E827 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = F577B3901CB81F840005E827 /* GameScene.sks */; };
 		F577B3931CB81F840005E827 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = F577B3921CB81F840005E827 /* GameScene.swift */; };
@@ -40,12 +35,7 @@
 		204D48FF2260D44F0079F60B /* Mario Lose.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Mario Lose.mp3"; sourceTree = "<group>"; };
 		204D49002260D44F0079F60B /* Mario Win.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Mario Win.mp3"; sourceTree = "<group>"; };
 		204D49012260D44F0079F60B /* fireball.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = fireball.wav; sourceTree = "<group>"; };
-		20B8F2E4225BF330004246E8 /* 1-1 Mario.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "1-1 Mario.mp3"; path = "../../../Desktop/1-1 Mario.mp3"; sourceTree = "<group>"; };
 		20B8F2E6225BF33B004246E8 /* 1-1 Mario.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "1-1 Mario.mp3"; sourceTree = "<group>"; };
-		20B8F2E7225BF4CE004246E8 /* Mario Win.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "Mario Win.mp3"; path = "../../../../Desktop/Mario Win.mp3"; sourceTree = "<group>"; };
-		20B8F2E9225BF521004246E8 /* Mario Lose.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "Mario Lose.mp3"; path = "../../../../Desktop/Mario Lose.mp3"; sourceTree = "<group>"; };
-		20B8F2EB225BF58E004246E8 /* blockbreak.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = blockbreak.wav; path = ../../../../Desktop/blockbreak.wav; sourceTree = "<group>"; };
-		20B8F2ED225BF591004246E8 /* fireball.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = fireball.wav; path = ../../../../Desktop/fireball.wav; sourceTree = "<group>"; };
 		F577B38B1CB81F840005E827 /* Bamboo Breakout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bamboo Breakout.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F577B38E1CB81F840005E827 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F577B3901CB81F840005E827 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -97,7 +87,6 @@
 		F577B38D1CB81F840005E827 /* Bamboo Breakout */ = {
 			isa = PBXGroup;
 			children = (
-				20B8F2E4225BF330004246E8 /* 1-1 Mario.mp3 */,
 				F577B38E1CB81F840005E827 /* AppDelegate.swift */,
 				F577B3941CB81F840005E827 /* GameViewController.swift */,
 				F577B3901CB81F840005E827 /* GameScene.sks */,
@@ -136,11 +125,7 @@
 			isa = PBXGroup;
 			children = (
 				20B8F2E6225BF33B004246E8 /* 1-1 Mario.mp3 */,
-				20B8F2E7225BF4CE004246E8 /* Mario Win.mp3 */,
-				20B8F2EB225BF58E004246E8 /* blockbreak.wav */,
-				20B8F2ED225BF591004246E8 /* fireball.wav */,
 				204D49012260D44F0079F60B /* fireball.wav */,
-				20B8F2E9225BF521004246E8 /* Mario Lose.mp3 */,
 				204D48FD2260D40F0079F60B /* blockbreak.wav */,
 				F597B1211CC1B1F000D398E0 /* BambooBreak.wav */,
 				F577B3B21CB8210A0005E827 /* game-over.wav */,
@@ -216,7 +201,6 @@
 				204D49042260D44F0079F60B /* fireball.wav in Resources */,
 				204D49032260D44F0079F60B /* Mario Win.mp3 in Resources */,
 				F5B9A21F1CC1392A000D5BC7 /* BallTrail.sks in Resources */,
-				20B8F2E5225BF330004246E8 /* 1-1 Mario.mp3 in Resources */,
 				F577B3BA1CB8210A0005E827 /* pongblip.wav in Resources */,
 				F577B3B81CB8210A0005E827 /* game-won.mp3 in Resources */,
 				204D49022260D44F0079F60B /* Mario Lose.mp3 in Resources */,
@@ -224,10 +208,6 @@
 				F597B1221CC1B1F000D398E0 /* BambooBreak.wav in Resources */,
 				F577B39D1CB81F840005E827 /* LaunchScreen.storyboard in Resources */,
 				F577B3B71CB8210A0005E827 /* game-over.wav in Resources */,
-				20B8F2E8225BF4CE004246E8 /* Mario Win.mp3 in Resources */,
-				20B8F2EE225BF591004246E8 /* fireball.wav in Resources */,
-				20B8F2EA225BF521004246E8 /* Mario Lose.mp3 in Resources */,
-				20B8F2EC225BF58E004246E8 /* blockbreak.wav in Resources */,
 				F577B39A1CB81F840005E827 /* Assets.xcassets in Resources */,
 				F5B9A2201CC1392A000D5BC7 /* BrokenPlatform.sks in Resources */,
 				F577B3B91CB8210A0005E827 /* paddleBlip.wav in Resources */,
